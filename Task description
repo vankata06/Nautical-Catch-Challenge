@@ -1,0 +1,101 @@
+You are given some interfaces, and you have to implement their functionality in the correct classes.
+There are 2 types of entities: Diver and Fish. There should also be a DiverRepository and FishRepository.
+Fish
+The Fish is a base class of any type of fish, and it should not be able to be instantiated.
+Data
+•	Name - string 
+o	If the name is null or whitespace, throw a new ArgumentException with the following message: 
+"Fish name should be determined."
+•	Points - double
+o	Represents the points a fish will bring to the diver.
+o	Must be a value between 1 and 10, both inclusive. If not, throw a new ArgumentException with the message: "Points must be a numeric value, between 1 and 10."
+o	This number will have at most one decimal place. This means the value can range from a whole number like 1 or 10, to a number with one digit after the decimal point, such as 1.1, 2.5, 3.7, or 9.1.
+•	TimeToCatch – int
+o	A numerical value representing how many seconds a diver requires to catch the fish.
+Override ToString() method:
+Overrides the existing method ToString() and modify it, so the returned string must be on a single line, in the following format:
+"{typeName}: {Name} [ Points: {Points}, Time to Catch: {TimeToCatch} seconds ]"
+Constructor
+A Fish should take the following values upon initialization: 
+string name, double points, int timeToCatch
+Child Classes
+There are three concrete types of Fish:
+ReefFish
+It has TimeToCatch value of 30 seconds.
+The Constructor of the ReefFish should take the following parameters upon initialization:
+string name, double points 
+PredatoryFish
+It has TimeToCatch value of 60 seconds.
+The Constructor of the PredatoryFish should take the following parameters upon initialization:
+string name, double points
+DeepSeaFish
+It has TimeToCatch value of 180 seconds.
+The Constructor of the DeepSeaFish should take the following parameters upon initialization:
+string name, double points
+Diver
+The Diver is a base class of any type of diver, and it should not be able to be instantiated.
+Data
+•	Name - string 
+o	If the Name is null or whitespace, throw a new ArgumentException with the message: 
+"Diver's name cannot be null or empty."
+•	OxygenLevel – int
+o	A numerical value representing the diver's oxygen level remaining, in seconds. If it drops below zero during any operation, it should be reset to zero.
+•	Catch – IReadOnlyCollection<string>
+o	It will store a sequence of names of fish, caught by a specific diver.
+•	CompetitionPoints – double
+o	Set the initial value of the property to zero. Returns a floating-point number rounded to the first decimal place. Represents the total points accumulated by a diver, based on the type of fish caught during the competition. 
+•	HasHealthIssues – bool
+o	The property indicates if the diver has potential health concerns. Its initial value is False, representing that the diver starts in a healthy state.
+Behavior
+void Hit(IFish fish)
+The Hit method signifies a diver's attempt to catch a specific fish. When invoked with an IFish object as its parameter, the method performs the following actions:
+•	The diver's OxygenLevel is decreased by the value of the TimeToCatch property of the provided Fish.
+•	The Name of the caught Fish is added to the diver's Catch list.
+•	The diver's CompetitionPoints are incremented by the value of the Points property of the caught Fish. 
+void Miss(int timeToCatch)
+The Miss() is an abstract method that should decrease the diver's OxygenLevel property. When the method is invoked the diver's OxygenLevel is decreased by a certain value, that will depend on the fish that is chased.
+OxygenLevel -= (int)Math.Round(…, MidpointRounding.AwayFromZero);
+void RenewOxy
+It should be abstract method. The diver's OxygenLevel should be fully replenished to its original or maximum value. This would mean setting the OxygenLevel back to its starting value depending on the diver’s type.
+void UpdateHealthStatus()
+This method changes the health status of the diver to True, if it is False or reciprocally.
+Override ToString() method:
+Overrides the existing method ToString() and modifies it, so the returned string must be on a single line, in the following format:
+"Diver [ Name: {Name}, Oxygen left: {OxygenLevel}, Fish caught: {count}, Points earned: {CompetitionPoints} ]"
+Constructor
+A Diver should take the following values upon initialization: 
+string name, int oxygenLevel
+Child Classes
+There are two concrete types of Diver:
+FreeDiver
+It has OxygenLevel value of 120 seconds.
+FreeDiver will decrease the OxygenLevel property by 60% (using the Miss() method) of the TimeToCatch value of the missed fish. 
+•	If the calculated value is not a whole number, round it to the nearest whole integer.
+The Constructor of the FreeDiver should take the following parameters upon initialization:
+string name
+ScubaDiver
+It has OxygenLevel value of 540 seconds.
+ScubaDiver will decrease the OxygenLevel property by 30% (using the Miss() method) of the TimeToCatch value of the missed a fish.
+•	If the calculated value is not a whole number, round it to the nearest whole integer.
+The Constructor of the ScubaDiver should take the following parameters upon initialization:
+string name
+DiverRepository
+The DiverRepository is an IRepository<IDiver>. Collection for the divers.
+Data
+•	Models – IReadOnlyCollection<IDiver>
+o	Returns a readonly collection of all divers, added to the repository.
+Behavior
+void AddModel(IDiver diver)
+•	Adds a new IDiver to the DiverRepository.
+IDiver GetModel(string name)
+•	Returns a diver with the given name from the collection, if there is any. Otherwise, returns null.
+FishRepository
+The FishRepository is an IRepository<IFish>. Collection for the fish.
+Data
+•	Models – IReadOnlyCollection<IFish>
+o	Returns a readonly collection of all fish, added to the repository.
+Behavior
+void AddModel(IFish fish)
+•	Adds a new IFish to the FishRepository.
+IFish GetModel(string name)
+Returns a fish with the given name from the collection, if there is any. Otherwise, returns null.
